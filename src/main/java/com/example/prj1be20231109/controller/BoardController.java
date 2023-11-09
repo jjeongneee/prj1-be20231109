@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
 public class BoardController {
+
     private final BoardService service;
 
     @PostMapping("add")
     public ResponseEntity add(@RequestBody Board board) {
-        System.out.println("board = " + board);
+        if (!service.validate(board)) {
+            return ResponseEntity.badRequest().build();
+        }
 
         if (service.save(board)) {
             return ResponseEntity.ok().build();
@@ -26,3 +29,10 @@ public class BoardController {
         }
     }
 }
+
+
+
+
+
+
+

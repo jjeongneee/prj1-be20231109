@@ -17,9 +17,16 @@ public interface BoardMapper {
     int insert(Board board);
 
     @Select("""
-            SELECT id, title, writer, inserted
-            FROM board
-            ORDER BY id DESC 
-            """)
+        SELECT id, title, writer, inserted
+        FROM board
+        ORDER BY id DESC
+        """)
     List<Board> selectAll();
+
+    @Select("""
+        SELECT id, title, content, writer, inserted
+        FROM board
+        WHERE id = #{id}
+        """)
+    Board selectById(Integer id);
 }

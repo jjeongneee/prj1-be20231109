@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+// MyBatis SQL 쿼리:
+//멤버를 삽입, 선택 및 삭제하기 위한 SQL 쿼리를 정의합니다.
 @Mapper
 public interface MemberMapper {
 

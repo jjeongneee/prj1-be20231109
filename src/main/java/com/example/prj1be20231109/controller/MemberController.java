@@ -88,6 +88,7 @@ public class MemberController {
     @PutMapping("edit")
     public ResponseEntity edit(@RequestBody Member member) {
         // TODO: 로그인 했는지? 자기 정보인지?
+
         if (service.update(member)) {
             return ResponseEntity.ok().build();
         } else {

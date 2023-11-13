@@ -69,4 +69,8 @@ public class MemberService {
         return mapper.update(member) == 1;
         
     }
+
+    public String getNickName(String nickName) {
+        return mapper.selectNickName(nickName);
+    }
 }

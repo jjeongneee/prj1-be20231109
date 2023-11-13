@@ -54,6 +54,15 @@ public class MemberController {
         }
     }
 
+    @GetMapping(value = "check", params = "nickName")
+    public ResponseEntity checkNickName(String nickName) {
+        if (service.getNickName(nickName) == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().build();
+        }
+    }
+
     // GET /api/member/list: 모든 멤버의 목록을 가져옵니다.
     @GetMapping("list")
     public List<Member> list() {

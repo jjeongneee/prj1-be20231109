@@ -21,12 +21,7 @@ public class BoardController {
     public ResponseEntity add(@RequestBody Board board,
                               @SessionAttribute(value = "login", required = false) Member login) {
 
-        Object login = session.getAttribute("login");
-
-        Member loginMember = (Member) login;
-
         System.out.println("login = " + login);
-        System.out.println("loginMember = " + loginMember);
 
         if (!service.validate(board)) {
             return ResponseEntity.badRequest().build();

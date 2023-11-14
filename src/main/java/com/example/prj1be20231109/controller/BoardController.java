@@ -18,7 +18,8 @@ public class BoardController {
     private final BoardService service;
 
     @PostMapping("add")
-    public ResponseEntity add(@RequestBody Board board, HttpSession session) {
+    public ResponseEntity add(@RequestBody Board board,
+                              @SessionAttribute(value = "login", required = false) Member login) {
 
         Object login = session.getAttribute("login");
 

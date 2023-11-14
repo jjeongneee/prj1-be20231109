@@ -12,6 +12,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
+    // isAdmin을 쓰기 위해서 MemberService라는 디펜던시가 필요
+    private final MemberService memberService;
     private final BoardMapper mapper;
 
     public boolean save(Board board, Member login) {
@@ -53,8 +55,14 @@ public class BoardService {
     }
 
     public boolean hasAccess(Integer id, Member login) {
+        if (memberService.isAdmin(login)) {
+            return true;
+        }
+
         Board board = mapper.selectById(id);
 
         return board.getWriter().equals(login.getId());
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.prj1be20231109.service;
 
 import com.example.prj1be20231109.domain.Member;
+import com.example.prj1be20231109.mapper.BoardMapper;
 import com.example.prj1be20231109.mapper.MemberMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ public class MemberService {
     // 의존성 주입:
     //데이터베이스 작업을 위해 MemberMapper를 사용합니다.
     private final MemberMapper mapper;
+    private final BoardMapper boardMapper;
+
     // add: 새로운 멤버를 추가합니다.
     public boolean add(Member member) {
         return mapper.insert(member) == 1;
@@ -60,6 +63,11 @@ public class MemberService {
     }
     // deleteMember 메서드는 멤버를 삭제합니다.
     public boolean deleteMember(String id) {
+        // 1. 이 멤버가 작성한 게시물 삭제
+         boardMapper.deleteByWriter(id);
+
+        // 2. 이 멤버 삭제
+
         return mapper.deleteById(id) == 1;
     }
 

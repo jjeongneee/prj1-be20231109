@@ -74,9 +74,18 @@ public class MemberController {
 
     // GET /api/member: 특정 멤버에 대한 정보를 가져옵니다.
     @GetMapping
-    public ResponseEntity<Member> view(String id) {
+    public ResponseEntity<Member> view(String id,
+                                       @SessionAttribute(value = "login", required = false)Member login) {
         // TODO : 로그인 했는지? -> 안했으면 401
         // TODO : 자기 정보인지? -> 아니면 403
+
+        if (login == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!service.hasAccess(id, login)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         Member member = service.getMember(id);
 
@@ -86,9 +95,17 @@ public class MemberController {
     // DELETE /api/member: 멤버를 삭제합니다.
 //    회원을 보거나 삭제하기 전에 인증 및 권한 확인을 위한 플레이스홀더가 있습니다. 이를 구현해야 합니다.
     @DeleteMapping
-    public ResponseEntity delete(String id) {
+    public ResponseEntity delete(String id,
+                                 @SessionAttribute(value = "login", required = false) Member login) {
         // TODO : 로그인 했는지? -> 안했으면 401
         // TODO : 자기 정보인지? -> 아니면 403
+        if (login == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401
+        }
+
+        if (!service.hasAccess(id, login)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403
+        }
 
         if (service.deleteMember(id)) {
             return ResponseEntity.ok().build();
@@ -98,8 +115,16 @@ public class MemberController {
     }
 
     @PutMapping("edit")
-    public ResponseEntity edit(@RequestBody Member member) {
+    public ResponseEntity edit(@RequestBody Member member,
+                               @SessionAttribute(value = "login", required = false) Member login) {
         // TODO: 로그인 했는지? 자기 정보인지?
+        if (login == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); //401
+        }
+
+        if (!service.hasAccess(member.getId(), login)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403
+        }
 
         if (service.update(member)) {
             return ResponseEntity.ok().build();

@@ -39,4 +39,8 @@ public class CommentService {
     public List<Comment> list(Integer boardId) {
         return mapper.selectByBoardId(boardId);
     }
+
+    public boolean delete(Integer commentId) {
+        return mapper.delete(commentId) == 1;
+    }
 }

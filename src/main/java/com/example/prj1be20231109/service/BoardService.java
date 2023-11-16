@@ -3,6 +3,7 @@ package com.example.prj1be20231109.service;
 import com.example.prj1be20231109.domain.Board;
 import com.example.prj1be20231109.domain.Member;
 import com.example.prj1be20231109.mapper.BoardMapper;
+import com.example.prj1be20231109.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
-    // isAdmin을 쓰기 위해서 MemberService라는 디펜던시가 필요
     private final MemberService memberService;
     private final BoardMapper mapper;
+    private final CommentMapper commentMapper;
 
     public boolean save(Board board, Member login) {
         board.setWriter(login.getId());
@@ -47,6 +48,9 @@ public class BoardService {
     }
 
     public boolean remove(Integer id) {
+        // 1. 게시물에 달린 댓글들 지우기
+        commentMapper.deleteByBoardId(id);
+
         return mapper.deleteById(id) == 1;
     }
 

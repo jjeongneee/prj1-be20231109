@@ -59,7 +59,6 @@ public class BoardService {
         if (prevPageNumber > 0) {
             pageInfo.put("prevPageNumber", prevPageNumber);
         }
-        pageInfo.put("prevPageNumber", startPageNumber - 10);
         if (nextPageNumber <= lastPageNumber) {
             pageInfo.put("nextPageNumber", nextPageNumber);
         }

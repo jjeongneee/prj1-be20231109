@@ -15,7 +15,7 @@ public interface BoardMapper {
     int insert(Board board);
 
     @Select("""
-            SELECT b.id,
+        SELECT b.id,
                b.title,
                b.writer,
                m.nickName,
@@ -26,9 +26,10 @@ public interface BoardMapper {
                      LEFT JOIN comment c on b.id = c.boardId
                      LEFT JOIN boardLike l ON b.id = l.boardId
         GROUP BY b.id
-        ORDER BY b.id DESC;
+        ORDER BY b.id DESC
+        LIMIT #{from}, 10;
         """)
-    List<Board> selectAll();
+    List<Board> selectAll(Integer from);
 
     @Select("""
         SELECT b.id,

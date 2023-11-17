@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,12 +23,9 @@ public class BoardController {
     public ResponseEntity add(@RequestBody Board board,
                               @SessionAttribute(value = "login", required = false) Member login) {
 
-        // 로그인 null이면 쓸 권한 없음
         if (login == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        System.out.println("login = " + login);
 
         if (!service.validate(board)) {
             return ResponseEntity.badRequest().build();
@@ -42,7 +40,9 @@ public class BoardController {
 
     // /api/board/list?p=6
     @GetMapping("list")
-    public List<Board> list(@RequestParam(value = "p", defaultValue = "1") Integer page) {
+    public Map<String, Object> list(@RequestParam(value = "p", defaultValue = "1") Integer page) {
+
+
         return service.list(page);
     }
 
@@ -80,9 +80,8 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403
         }
 
-//        System.out.println("board = " + board);
         if (service.validate(board)) {
-            if (service.update(board)){
+            if (service.update(board)) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.internalServerError().build();

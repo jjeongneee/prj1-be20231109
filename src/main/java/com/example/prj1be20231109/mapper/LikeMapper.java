@@ -31,8 +31,8 @@ public interface LikeMapper {
         SELECT * 
         FROM boardLike
         WHERE 
-        boardId = #{boardId}
-        AND memberId = #{memberId}
+                boardId = #{boardId}
+            AND memberId = #{memberId}   
         """)
     Like selectByBoardIdAndMemberId(Integer boardId, String memberId);
 }

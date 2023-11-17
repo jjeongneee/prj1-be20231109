@@ -19,7 +19,7 @@ public class LikeController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> like(@RequestBody Like like,
-                                                    @SessionAttribute(value = "login", required = false)Member login) {
+                                                    @SessionAttribute(value = "login", required = false) Member login) {
         if (login == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

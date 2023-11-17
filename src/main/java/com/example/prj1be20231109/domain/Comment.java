@@ -1,5 +1,6 @@
 package com.example.prj1be20231109.domain;
 
+import com.example.prj1be20231109.util.AppUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;

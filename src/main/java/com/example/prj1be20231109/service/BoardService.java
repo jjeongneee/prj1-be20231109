@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -37,6 +37,7 @@ public class BoardService {
     private String bucket;
 
     public boolean save(Board board, MultipartFile[] files, Member login) throws IOException {
+        //
         board.setWriter(login.getId());
 
         int cnt = mapper.insert(board);
@@ -92,7 +93,7 @@ public class BoardService {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> pageInfo = new HashMap<>();
 
-        int countAll = mapper.countAll("%" + keyword + "%"); // %%
+        int countAll = mapper.countAll("%" + keyword + "%");
         int lastPageNumber = (countAll - 1) / 10 + 1;
         int startPageNumber = (page - 1) / 10 * 10 + 1;
         int endPageNumber = startPageNumber + 9;

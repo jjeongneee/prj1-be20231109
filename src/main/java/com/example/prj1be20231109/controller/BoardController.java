@@ -82,10 +82,6 @@ public class BoardController {
                                @RequestParam(value = "uploadFiles[]", required = false) MultipartFile[] uploadFiles,
                                @SessionAttribute(value = "login", required = false) Member login) throws IOException {
 
-        System.out.println("board = " + board);
-        System.out.println("removeFileIds = " + removeFileIds);
-        System.out.println("uploadFiles = " + uploadFiles);
-
         if (login == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401
         }

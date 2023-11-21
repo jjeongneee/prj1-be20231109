@@ -25,14 +25,14 @@ public interface BoardMapper {
                COUNT(DISTINCT l.id) countLike,
                COUNT(DISTINCT f.id) countFile
         FROM board b JOIN member m ON b.writer = m.id
-                     LEFT JOIN comment c on b.id = c.boardId
+                     LEFT JOIN comment c ON b.id = c.boardId
                      LEFT JOIN boardLike l ON b.id = l.boardId
                      LEFT JOIN boardFile f ON b.id = f.boardId
         WHERE b.content LIKE #{keyword}
-            OR b.title LIKE #{keyword}
+           OR b.title LIKE #{keyword}
         GROUP BY b.id
         ORDER BY b.id DESC
-        LIMIT #{from}, 10;
+        LIMIT #{from}, 10
         """)
     List<Board> selectAll(Integer from, String keyword);
 
@@ -57,7 +57,7 @@ public interface BoardMapper {
     @Update("""
         UPDATE board
         SET title = #{title},
-            content = #{content},
+            content = #{content}
         WHERE id = #{id}
         """)
     int update(Board board);
@@ -80,7 +80,7 @@ public interface BoardMapper {
     @Select("""
         SELECT COUNT(*) FROM board
         WHERE title LIKE #{keyword}
-            OR content LIKE #{keyword}
+           OR content LIKE #{keyword}
         """)
     int countAll(String keyword);
 }

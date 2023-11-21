@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
@@ -171,7 +170,7 @@ public class BoardService {
         fileMapper.deleteByBoardId(id);
     }
 
-    public boolean update(Board board, List<Integer> removeFileIds, MultipartFile[] updateFiles) throws IOException {
+    public boolean update(Board board, List<Integer> removeFileIds, MultipartFile[] uploadFiles) throws IOException {
 
         // 파일 지우기
         if (removeFileIds != null) {
@@ -180,10 +179,9 @@ public class BoardService {
                 BoardFile file = fileMapper.selectById(id);
                 String key = "prj1/" + board.getId() + "/" + file.getName();
                 DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
-                                .bucket(bucket)
-                                .bucket(bucket)
-                                .key(key)
-                                .build();
+                        .bucket(bucket)
+                        .key(key)
+                        .build();
                 s3.deleteObject(objectRequest);
 
                 // db에서 지우기
@@ -192,8 +190,8 @@ public class BoardService {
         }
 
         // 파일 추가하기
-        if (updateFiles != null) {
-            for (MultipartFile file : updateFiles) {
+        if (uploadFiles != null) {
+            for (MultipartFile file : uploadFiles) {
                 // s3에 올리기
                 upload(board.getId(), file);
                 // db에 추가하기
@@ -219,24 +217,4 @@ public class BoardService {
     }
 
 
-    public void deleteImage(Integer boardId, String fileName) {
-        // 이미지 삭제 처리
-        String key = "prj1/" + boardId + "/" +fileName;
-        DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .build();
-        s3.deleteObject(objectRequest);
-    }
-
-    public void uploadImage(Integer boardId, MultipartFile file) throws IOException{
-        //이미지 업로드 처리
-        String key = "prj1/" + boardId + "/" + file.getOriginalFilename();
-        PutObjectRequest objectRequest = PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .acl(ObjectCannedACL.PUBLIC_READ)
-                .build();
-        s3.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-    }
 }

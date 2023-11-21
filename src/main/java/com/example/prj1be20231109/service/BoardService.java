@@ -171,7 +171,36 @@ public class BoardService {
         fileMapper.deleteByBoardId(id);
     }
 
-    public boolean update(Board board) {
+    public boolean update(Board board, List<Integer> removeFileIds, MultipartFile[] updateFiles) throws IOException {
+
+        // 파일 지우기
+        if (removeFileIds != null) {
+            for (Integer id : removeFileIds) {
+                // s3에서 지우기
+                BoardFile file = fileMapper.selectById(id);
+                String key = "prj1/" + board.getId() + "/" + file.getName();
+                DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                                .bucket(bucket)
+                                .bucket(bucket)
+                                .key(key)
+                                .build();
+                s3.deleteObject(objectRequest);
+
+                // db에서 지우기
+                fileMapper.deleteById(id);
+            }
+        }
+
+        // 파일 추가하기
+        if (updateFiles != null) {
+            for (MultipartFile file : updateFiles) {
+                // s3에 올리기
+                upload(board.getId(), file);
+                // db에 추가하기
+                fileMapper.insert(board.getId(), file.getOriginalFilename());
+            }
+        }
+
         return mapper.update(board) == 1;
     }
 
@@ -190,4 +219,24 @@ public class BoardService {
     }
 
 
+    public void deleteImage(Integer boardId, String fileName) {
+        // 이미지 삭제 처리
+        String key = "prj1/" + boardId + "/" +fileName;
+        DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+        s3.deleteObject(objectRequest);
+    }
+
+    public void uploadImage(Integer boardId, MultipartFile file) throws IOException{
+        //이미지 업로드 처리
+        String key = "prj1/" + boardId + "/" + file.getOriginalFilename();
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
+        s3.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+    }
 }
